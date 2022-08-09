@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-api-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: testapiproject
+  template:
+    metadata:
+      labels:
+        app: testapiproject
+    spec:
+      containers:
+      - name: testapiproject
+        image: ostashev/testapiproject:latest
+        resources:
+          requests:
+            cpu: 100m
+            memory: 30Mi
+          limits:
+            cpu: 300m
+            memory: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: app-api-clusterip-srv
+spec:
+  type: ClusterIP
+  selector:
+    app: testapiproject
+  ports:
+    - name: testapiproject
+      protocol: TCP
+      port: 80
+      targetPort: 80
